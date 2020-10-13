@@ -1,6 +1,5 @@
 module Ast where
 
-import Prelude
 import Data.List (List)
 import Data.Maybe (Maybe)
 
