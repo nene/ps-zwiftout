@@ -1,10 +1,6 @@
 module Main where
 
-import Prelude
-import Ast (Duration, Cadence)
+import Ast (Comment)
 
-totalDuration :: Duration -> Duration -> Duration
-totalDuration a b = a + b
-
-totalCadence :: Cadence -> Cadence -> Cadence
-totalCadence a b = a + b
+stripComments :: forall t. { comments :: Array Comment | t } -> { comments :: Array Comment | t }
+stripComments interval = interval { comments = [] }

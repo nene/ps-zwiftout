@@ -4,7 +4,7 @@ import Prelude
 import Data.List (List)
 import Data.Maybe (Maybe)
 
-data Workout = Workout {
+type Workout = {
   name :: String,
   author :: String,
   description :: String,
@@ -12,7 +12,7 @@ data Workout = Workout {
   intervals :: List Interval
 }
 
-data Interval = Interval {
+type Interval = {
   type :: String,
   duration :: Duration,
   intensity :: Intensity,
@@ -20,7 +20,7 @@ data Interval = Interval {
   comments :: List Comment
 }
 
-data Comment = Comment {
+type Comment = {
   offset :: Duration,
   text :: String
 }

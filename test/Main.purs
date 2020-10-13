@@ -3,7 +3,7 @@ module Test.Main where
 import Prelude
 
 import Effect (Effect)
-import Main (totalCadence, totalDuration)
+import Main (stripComments)
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
@@ -11,12 +11,10 @@ import Test.Unit.Main (runTest)
 main :: Effect Unit
 main = do
   runTest do
-    suite "totalDuration" do
-      test "3 + 4 = 7" do
-        Assert.equal 7 (totalDuration 3 4)
-      test "5 + 0 = 5" do
-        Assert.equal 5 (totalDuration 5 0)
-
-    suite "totalCadence" do
-      test "3 + 4 = 7" do
-        Assert.equal 7 (totalCadence 3 4)
+    suite "stripComments" do
+      test "nothing happens when no comments to begin with" do
+        Assert.equal { type: "Interval", comments: [] } (stripComments { type: "Interval", comments: [] })
+      test "all comments get discarded" do
+        Assert.equal
+          { comments: [] }
+          (stripComments { comments: [{ offset: 0, text: "Hello" }, { offset: 20, text: "World" }] })
