@@ -1,7 +1,10 @@
 module Main where
 
 import Prelude
-import Math (sqrt)
+import Ast (Duration, Cadence)
 
-diagonal :: Number -> Number -> Number
-diagonal w h = sqrt (w * w + h * h)
+totalDuration :: Duration -> Duration -> Duration
+totalDuration a b = a + b
+
+totalCadence :: Cadence -> Cadence -> Cadence
+totalCadence a b = a + b
