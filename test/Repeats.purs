@@ -5,7 +5,7 @@ import Prelude
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Repeats (PlainOrRepeatedInterval(..), detectRepeats)
+import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)

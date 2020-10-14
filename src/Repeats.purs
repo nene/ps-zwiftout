@@ -1,8 +1,8 @@
-module Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
+module Zwiftout.Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
 
 import Prelude
 
-import Ast (Comment, Duration, Interval)
+import Zwiftout.Ast (Comment, Duration, Interval)
 import Data.List (List(..), all, concat, drop, length, scanl, take, takeWhile, zipWith, (:))
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
