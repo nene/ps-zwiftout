@@ -1,4 +1,6 @@
 {
+  "name": "zwiftout",
+  "private": true,
   "devDependencies": {
     "purty": "^6.2.0"
   }
