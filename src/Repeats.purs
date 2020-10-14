@@ -1,4 +1,4 @@
-module Main (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
+module Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
 
 import Prelude
 
