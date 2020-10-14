@@ -1,4 +1,4 @@
-module Zwiftout.Ast where
+module Zwiftout.Workout where
 
 import Data.List (List)
 import Data.Maybe (Maybe)

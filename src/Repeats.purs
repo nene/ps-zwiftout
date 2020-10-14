@@ -2,7 +2,7 @@ module Zwiftout.Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInt
 
 import Prelude
 
-import Zwiftout.Ast (Comment, Duration, Interval)
+import Zwiftout.Workout (Comment, Duration, Interval)
 import Data.List (List(..), all, concat, drop, length, scanl, take, takeWhile, zipWith, (:))
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
