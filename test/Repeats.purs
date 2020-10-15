@@ -33,16 +33,15 @@ testDetectRepeats = do
           )
       test "detects whole workout consisting of repetitions" do
         Assert.equal
-          ( ( Repeated
-                { times: 4
-                , intervals:
-                    ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                        : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                        : Nil
-                    )
-                , comments: Nil
-                }
-            )
+          ( Repeated
+              { times: 4
+              , intervals:
+                  ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                      : Nil
+                  )
+              , comments: Nil
+              }
               : Nil
           )
           ( detectRepeats
