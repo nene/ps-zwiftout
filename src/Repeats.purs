@@ -53,7 +53,7 @@ countRepeats :: List Interval -> List Interval -> Int
 countRepeats reference = chunk (length reference) >>> takeWhile (similar reference) >>> length
 
 similar :: List Interval -> List Interval -> Boolean
-similar xs ys = all identity (zipWith similar' xs ys)
+similar xs ys = (length xs == length ys) && (all identity (zipWith similar' xs ys))
   where
   similar' :: Interval -> Interval -> Boolean
   similar' x y = x.type == y.type && x.duration == y.duration && x.intensity == y.intensity && x.cadence == y.cadence

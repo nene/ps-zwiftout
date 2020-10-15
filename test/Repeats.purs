@@ -57,6 +57,29 @@ testDetectRepeats = do
                   : Nil
               )
           )
+      test "does not detect partial repetitions" do
+        Assert.equal
+          ( Repeated
+              { times: 2
+              , intervals:
+                  ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                      : Nil
+                  )
+              , comments: Nil
+              }
+              : Plain { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+              : Nil
+          )
+          ( detectRepeats
+              ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+                  : Nil
+              )
+          )
       test "detects repetitions in the middle of workout" do
         Assert.equal
           ( Plain { type: "Warmup", duration: 60, intensity: 0.75, cadence: Nothing, comments: Nil }
