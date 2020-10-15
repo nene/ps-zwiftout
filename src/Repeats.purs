@@ -1,10 +1,11 @@
 module Zwiftout.Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
 
 import Prelude
-import Zwiftout.Workout (Comment, Duration, Interval)
 import Data.List (List(..), all, concat, drop, length, scanl, take, takeWhile, zipWith, (:))
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
+import Zwiftout.Intensity (Intensity(..))
+import Zwiftout.Workout (Comment, Duration, Interval)
 
 type RepeatedInterval
   = { times :: Int
@@ -56,7 +57,16 @@ similar :: List Interval -> List Interval -> Boolean
 similar xs ys = (length xs == length ys) && (all identity (zipWith similar' xs ys))
   where
   similar' :: Interval -> Interval -> Boolean
-  similar' x y = x.type == y.type && x.duration == y.duration && x.intensity == y.intensity && x.cadence == y.cadence
+  similar' x y =
+    x.type == y.type &&
+    x.duration == y.duration &&
+    isConstantIntensity x.intensity &&
+    x.intensity == y.intensity &&
+    x.cadence == y.cadence
+
+isConstantIntensity :: Intensity -> Boolean
+isConstantIntensity (ConstantIntensity _) = true
+isConstantIntensity _ = false
 
 chunk :: forall a. Int -> List a -> List (List a)
 chunk 0 _ = Nil

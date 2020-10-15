@@ -7,8 +7,8 @@ import Effect (Effect)
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
-import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
 import Zwiftout.Intensity (Intensity(..))
+import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
 
 testDetectRepeats :: Effect Unit
 testDetectRepeats = do
@@ -82,7 +82,7 @@ testDetectRepeats = do
           )
       test "detects repetitions in the middle of workout" do
         Assert.equal
-          ( Plain { type: "Warmup", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil }
+          ( Plain { type: "Warmup", duration: 60, intensity: RangeIntensity 0.1 0.2, cadence: Nothing, comments: Nil }
               : Plain { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
               : Repeated
                   { times: 4
@@ -94,11 +94,11 @@ testDetectRepeats = do
                   , comments: Nil
                   }
               : Plain { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
-              : Plain { type: "Cooldown", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: RangeIntensity 0.2 0.1, cadence: Nothing, comments: Nil }
               : Nil
           )
           ( detectRepeats
-              ( { type: "Warmup", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
+              ( { type: "Warmup", duration: 60, intensity: RangeIntensity 0.1 0.2, cadence: Nothing, comments: Nil }
                   : { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
                   : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
                   : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
@@ -109,7 +109,7 @@ testDetectRepeats = do
                   : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
                   : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                   : { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
-                  : { type: "Cooldown", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
+                  : { type: "Cooldown", duration: 60, intensity: RangeIntensity 0.2 0.1, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
@@ -169,6 +169,46 @@ testDetectRepeats = do
                   : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Just 80, comments: Nil }
                   : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Just 100, comments: Nil }
                   : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Just 80, comments: Nil }
+                  : Nil
+              )
+          )
+      test "does not consider range-intensity-intervals to be repeatable" do
+        Assert.equal
+          ( Plain { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+              : Plain { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+              : Plain { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+              : Nil
+          )
+          ( detectRepeats
+              ( { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Warmup", duration: 30, intensity: RangeIntensity 0.5 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Cooldown", duration: 60, intensity: RangeIntensity 1.0 0.5, cadence: Nothing, comments: Nil }
+                  : Nil
+              )
+          )
+      test "does not consider free-intensity-intervals to be repeatable" do
+        Assert.equal
+          ( Plain { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Plain { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Plain { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Plain { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Plain { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Plain { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+              : Nil
+          )
+          ( detectRepeats
+              ( { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+                  : { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+                  : { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+                  : { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+                  : { type: "FreeRide", duration: 30, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
+                  : { type: "FreeRide", duration: 60, intensity: FreeIntensity, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
