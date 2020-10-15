@@ -4,10 +4,11 @@ import Prelude
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
+import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
+import Zwiftout.Intensity (Intensity(..))
 
 testDetectRepeats :: Effect Unit
 testDetectRepeats = do
@@ -17,17 +18,17 @@ testDetectRepeats = do
         Assert.equal Nil (detectRepeats Nil)
       test "does nothing when no interval repeats" do
         Assert.equal
-          ( Plain { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-              : Plain { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-              : Plain { type: "Interval", duration: 30, intensity: 1.2, cadence: Nothing, comments: Nil }
-              : Plain { type: "Cooldown", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
+          ( Plain { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+              : Plain { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Interval", duration: 30, intensity: ConstantIntensity 1.2, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
               : Nil
           )
           ( detectRepeats
-              ( { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 30, intensity: 1.2, cadence: Nothing, comments: Nil }
-                  : { type: "Cooldown", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
+              ( { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 30, intensity: ConstantIntensity 1.2, cadence: Nothing, comments: Nil }
+                  : { type: "Cooldown", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
@@ -36,8 +37,8 @@ testDetectRepeats = do
           ( Repeated
               { times: 4
               , intervals:
-                  ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                      : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                       : Nil
                   )
               , comments: Nil
@@ -45,14 +46,14 @@ testDetectRepeats = do
               : Nil
           )
           ( detectRepeats
-              ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+              ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
@@ -61,54 +62,54 @@ testDetectRepeats = do
           ( Repeated
               { times: 2
               , intervals:
-                  ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                      : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                       : Nil
                   )
               , comments: Nil
               }
-              : Plain { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
               : Nil
           )
           ( detectRepeats
-              ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
+              ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
       test "detects repetitions in the middle of workout" do
         Assert.equal
-          ( Plain { type: "Warmup", duration: 60, intensity: 0.75, cadence: Nothing, comments: Nil }
-              : Plain { type: "Rest", duration: 120, intensity: 0.2, cadence: Nothing, comments: Nil }
+          ( Plain { type: "Warmup", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil }
+              : Plain { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
               : Repeated
                   { times: 4
                   , intervals:
-                      ( { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                          : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                      ( { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                          : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                           : Nil
                       )
                   , comments: Nil
                   }
-              : Plain { type: "Rest", duration: 120, intensity: 0.2, cadence: Nothing, comments: Nil }
-              : Plain { type: "Cooldown", duration: 60, intensity: 0.75, cadence: Nothing, comments: Nil }
+              : Plain { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
+              : Plain { type: "Cooldown", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil }
               : Nil
           )
           ( detectRepeats
-              ( { type: "Warmup", duration: 60, intensity: 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
-                  : { type: "Rest", duration: 120, intensity: 0.2, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 120, intensity: 0.2, cadence: Nothing, comments: Nil }
-                  : { type: "Cooldown", duration: 60, intensity: 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
+              ( { type: "Warmup", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
+                  : { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 120, intensity: ConstantIntensity 0.2, cadence: Nothing, comments: Nil }
+                  : { type: "Cooldown", duration: 60, intensity: ConstantIntensity 0.75, cadence: Nothing, comments: Nil } -- TODO: use RangeIntensity here
                   : Nil
               )
           )
@@ -117,8 +118,8 @@ testDetectRepeats = do
           ( Repeated
               { times: 2
               , intervals:
-                  ( { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                      : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  ( { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                       : Nil
                   )
               , comments: Nil
@@ -126,8 +127,8 @@ testDetectRepeats = do
               : Repeated
                   { times: 2
                   , intervals:
-                      ( { type: "Interval", duration: 100, intensity: 1.0, cadence: Nothing, comments: Nil }
-                          : { type: "Rest", duration: 100, intensity: 0.5, cadence: Nothing, comments: Nil }
+                      ( { type: "Interval", duration: 100, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                          : { type: "Rest", duration: 100, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                           : Nil
                       )
                   , comments: Nil
@@ -135,26 +136,26 @@ testDetectRepeats = do
               : Nil
           )
           ( detectRepeats
-              ( { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 60, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 100, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 100, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 100, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 100, intensity: 0.5, cadence: Nothing, comments: Nil }
+              ( { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 60, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 100, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 100, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 100, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 100, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                   : Nil
               )
           )
       test "takes cadence differences into account" do
         Assert.equal
-          ( Plain { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-              : Plain { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
+          ( Plain { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+              : Plain { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
               : Repeated
                   { times: 2
                   , intervals:
-                      ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Just 100, comments: Nil }
-                          : { type: "Rest", duration: 60, intensity: 0.5, cadence: Just 80, comments: Nil }
+                      ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Just 100, comments: Nil }
+                          : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Just 80, comments: Nil }
                           : Nil
                       )
                   , comments: Nil
@@ -162,12 +163,12 @@ testDetectRepeats = do
               : Nil
           )
           ( detectRepeats
-              ( { type: "Interval", duration: 120, intensity: 1.0, cadence: Nothing, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Nothing, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Just 100, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Just 80, comments: Nil }
-                  : { type: "Interval", duration: 120, intensity: 1.0, cadence: Just 100, comments: Nil }
-                  : { type: "Rest", duration: 60, intensity: 0.5, cadence: Just 80, comments: Nil }
+              ( { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Just 100, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Just 80, comments: Nil }
+                  : { type: "Interval", duration: 120, intensity: ConstantIntensity 1.0, cadence: Just 100, comments: Nil }
+                  : { type: "Rest", duration: 60, intensity: ConstantIntensity 0.5, cadence: Just 80, comments: Nil }
                   : Nil
               )
           )
@@ -176,8 +177,8 @@ testDetectRepeats = do
           ( Repeated
               { times: 2
               , intervals:
-                  ( { type: "Interval", duration: 100, intensity: 1.0, cadence: Nothing, comments: Nil }
-                      : { type: "Rest", duration: 100, intensity: 0.5, cadence: Nothing, comments: Nil }
+                  ( { type: "Interval", duration: 100, intensity: ConstantIntensity 1.0, cadence: Nothing, comments: Nil }
+                      : { type: "Rest", duration: 100, intensity: ConstantIntensity 0.5, cadence: Nothing, comments: Nil }
                       : Nil
                   )
               , comments:
@@ -200,7 +201,7 @@ testDetectRepeats = do
           ( detectRepeats
               ( { type: "Interval"
                 , duration: 100
-                , intensity: 1.0
+                , intensity: ConstantIntensity 1.0
                 , cadence: Nothing
                 , comments:
                     ( { offset: 0, text: "Let's start" }
@@ -211,7 +212,7 @@ testDetectRepeats = do
                 }
                   : { type: "Rest"
                     , duration: 100
-                    , intensity: 0.5
+                    , intensity: ConstantIntensity 0.5
                     , cadence: Nothing
                     , comments:
                         ( { offset: 0, text: "Huh... have a rest" }
@@ -221,7 +222,7 @@ testDetectRepeats = do
                     }
                   : { type: "Interval"
                     , duration: 100
-                    , intensity: 1.0
+                    , intensity: ConstantIntensity 1.0
                     , cadence: Nothing
                     , comments:
                         ( { offset: 0, text: "Bring it on again!" }
@@ -232,7 +233,7 @@ testDetectRepeats = do
                     }
                   : { type: "Rest"
                     , duration: 100
-                    , intensity: 0.5
+                    , intensity: ConstantIntensity 0.5
                     , cadence: Nothing
                     , comments:
                         ( { offset: 30, text: "Wow... you did it!" }

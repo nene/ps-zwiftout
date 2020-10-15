@@ -2,6 +2,7 @@ module Zwiftout.Workout where
 
 import Data.List (List)
 import Data.Maybe (Maybe)
+import Zwiftout.Intensity (Intensity)
 
 type Workout
   = { name :: String
@@ -26,9 +27,6 @@ type Comment
 
 type Duration
   = Int
-
-type Intensity
-  = Number
 
 type Cadence
   = Int
