@@ -8,7 +8,8 @@ import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
 import Zwiftout.Intensity (Intensity(..))
-import Zwiftout.Repeats (PlainOrRepeatedInterval(..), detectRepeats)
+import Zwiftout.Repeats (detectRepeats)
+import Zwiftout.PlainOrRepeatedInterval (PlainOrRepeatedInterval(..))
 
 testDetectRepeats :: Effect Unit
 testDetectRepeats = do

@@ -1,31 +1,12 @@
-module Zwiftout.Repeats (detectRepeats, PlainOrRepeatedInterval(..), RepeatedInterval) where
+module Zwiftout.Repeats (detectRepeats) where
 
 import Prelude
 import Data.List (List(..), all, concat, drop, length, scanl, take, takeWhile, zipWith, (:))
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Zwiftout.Intensity (Intensity(..))
+import Zwiftout.PlainOrRepeatedInterval (RepeatedInterval, PlainOrRepeatedInterval(..))
 import Zwiftout.Workout (Comment, Duration, Interval)
-
-type RepeatedInterval
-  = { times :: Int
-    , intervals :: List Interval
-    , comments :: List Comment
-    }
-
-data PlainOrRepeatedInterval
-  = Plain Interval
-  | Repeated RepeatedInterval
-
-instance eqPlainOrRepeatedInterval :: Eq PlainOrRepeatedInterval where
-  eq (Plain a) (Plain b) = a == b
-  eq (Repeated a) (Repeated b) = a == b
-  eq (Plain a) (Repeated b) = false
-  eq (Repeated a) (Plain b) = false
-
-instance showPlainOrRepeatedInterval :: Show PlainOrRepeatedInterval where
-  show (Plain a) = "(Plain " <> show a <> ")"
-  show (Repeated a) = "(Repeated " <> show a <> ")"
 
 windowSize :: Int
 windowSize = 2
